@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -10,4 +14,64 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.app-container {
+  background-color: #282c34;
+  min-height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.app-section-nav {
+  flex: 1;
+  min-width: 200px;
+}
+
+.app-section-nav > ul {
+  padding: 0 20px;
+  list-style: none;
+}
+
+.app-section-nav > ul > li {
+  padding: 10px;
+  border-bottom: 1px solid white;
+}
+
+.app-section-nav > ul > li:last-of-type {
+  border: none;
+}
+
+.app-section-container {
+  flex: 5;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.app-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+}
+
+button {
+  margin: 0 10px;
+  font-size: 16px;
+  background-color: #61dafb;
+  border: none;
+  color: #000000;
+  padding: 10px 25px;
+  white-space: nowrap;
+  outline: none;
+}
+
+button:hover {
+  cursor: pointer;
 }

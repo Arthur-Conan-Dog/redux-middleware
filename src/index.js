@@ -1,19 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import ReduxThunk from "redux-thunk";
-import reducer from './reducer'
 
-const store = createStore(reducer, applyMiddleware(ReduxThunk));
+import MultipleStoresInOneApp from './sections/01-multiple-stores'
+
+import * as serviceWorker from './serviceWorker';
+
+function App() {
+  return (
+    <div className="app-container">
+      <nav className="app-section-nav">
+        <ul>
+          <li>Multiple stores in one app.</li>
+        </ul>
+      </nav>
+      <main className="app-section-container">
+        <MultipleStoresInOneApp />
+      </main>
+    </div>
+  )
+}
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <App />,
   document.getElementById('root')
 );
 

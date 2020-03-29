@@ -1,68 +1,33 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Questions
 
-In the project directory, you can run:
+- [x] One store for one app?
 
-### `yarn start`
+  - [x] What if one store in other?
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [ ] How middleware works?
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+  - [ ] middleware applied sequence matters.
 
-### `yarn test`
+  - [ ] what if I use dispatch given from the mapDispatchToProps in action creator?
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [ ] How does reducer match actions?
 
-### `yarn build`
+## Tasks
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [x] Show comparisons on same page.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- [ ] Add nav function.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## FAQ
 
-### `yarn eject`
+### Only One Redux Store Per App?
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+这是官方建议必须遵守的原则，但 Redux 也支持一个应用多个 store 的情况。
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+为什么要求一个应用只由一个 store 来管理？=> https://stackoverflow.com/questions/33619775/redux-multiple-stores-why-not => 大部分原因在于 Redux 是基于 Flux 的一个改进方案，跟 Flux 的实现所带来的问题有一定关系。具体：1. 通过多个 store 而试图模块化的方式可以通过组合 reducer 来实现。2. 服务端渲染时无需根据 ID 等唯一标示来区分 store。3. Redux DevTools Time Travel 成为可能。4. 单一 store 能够确保 subscriber 消费数据时，数据已被处理，而多 store 则不能保证这点。
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+#### What if one store in other?
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+It will find the closest store to connect.
