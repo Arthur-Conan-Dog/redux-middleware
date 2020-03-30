@@ -6,11 +6,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
   - [x] What if one store in other?
 
-- [ ] How middleware works?
+- [x] How middleware works together?
 
-  - [ ] middleware applied sequence matters.
+  - [x] middleware applied sequence matters.
 
-  - [ ] what if I use dispatch given from the mapDispatchToProps in action creator?
+  - [x] what if I use dispatch given from the mapDispatchToProps in action creator?
+
+- [ ] Ways of handling async calls
+
+  - [ ] redux-promise
+
+  - [ ] redux-saga
 
 - [ ] How does reducer match actions?
 
@@ -31,3 +37,83 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 #### What if one store in other?
 
 It will find the closest store to connect.
+
+### How middleware works together?
+
+一些能够帮助理解的断点 & 源码：
+
+* logger.js => console.info('dispatching', action) & console.log('next state', store.getState())
+
+* redux-thunk index.js => return action(dispatch, getState, extraArgument) & return next(action)
+
+* redux/src/applyMiddleware.ts => https://github.com/reduxjs/redux/blob/9d3273846aa8906d38890c410b62fb09a4992018/src/applyMiddleware.ts#L75
+
+  * 为 middleware 暂存 store 的引用
+
+* redux/src/compose.ts => https://github.com/reduxjs/redux/blob/9d3273846aa8906d38890c410b62fb09a4992018/src/compose.ts#L101
+
+  * 巧妙地使用 reduce 来完成 chaining => store.dispatch => c) b) a) => new "dispatch"
+
+实现接入 middleware 机制代码的演变过程：
+
+1. 接入单个 middleware：在 dispatch 前后加入自己的逻辑
+
+```js
+function addLoggerLogicOntoDispatch(store) {
+  let dispatch = store.dispatch
+  store.dispatch = (action) => {
+    console.log('something')
+    dispatch(action)
+    return action
+  }
+}
+```
+
+2. 接入多个 middleware
+
+```js
+function addLoggerLogicOntoDispatch(store) {
+  // ...
+}
+
+function addReportLogicOntoDispatch(store) {
+  // samiliar as addLoggerLogicInDispatch
+}
+
+// add middlewares' logic onto dispatch
+addLoggerLogicOntoDispatch()
+addReportLogicOntoDispatch()
+```
+
+3. 不想在每个middleware的内部实现中保留对 dispatch 胡作非为的逻辑
+
+```js
+function logger(store) {
+  return dispatch => action => {
+    console.log(action)
+    dispatch(action)
+    return action
+  }
+}
+
+store.dispatch = logger(store)(store.dispatch) // a new dispatch with logger logic in it
+
+function reporter(store) {
+  return dispatch => action => {
+    // ...
+  }
+}
+
+store.dispatch = reporter(store)(store.dispatch) // a new dispatch with logger + dispatch loggic in it
+```
+
+4. 美化遍历 & chaining middlewares 的逻辑
+
+```js
+const compose = middlewares.reduce((prev, next) => (...args) => prev(next(args)))
+dispatch = compose()(store.dispatch)
+```
+
+#### For thunk's implementation, what if I use dispatch given from the mapDispatchToProps in action creator?
+
+是可以工作的。但是以 logger 为例，dispatch thunk type of action 这件事由于逻辑的简化就不会被记录下来了。另外在使用形式上也与其他 action 不符，因而显得不美观。

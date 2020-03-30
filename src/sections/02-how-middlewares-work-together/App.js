@@ -25,9 +25,23 @@ const mapStateToProps = (state) => ({
   data: state.data,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchData: () => dispatch(actionCreator.fetchData()),
-  clearData: () => dispatch(actionCreator.clearData()),
-});
+const AppUseNormalDispatch = connect(
+  mapStateToProps,
+  dispatch => ({
+    fetchData: () => dispatch(actionCreator.fetchData()),
+    clearData: () => dispatch(actionCreator.clearData()),
+  })
+)(App);
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+const AppUseDispatchInMapping = connect(
+  mapStateToProps,
+  dispatch => ({
+    fetchData: () => actionCreator.fetchDataByDispatch(dispatch),
+    clearData: () => dispatch(actionCreator.clearData()),
+  })
+)(App);
+
+export {
+  AppUseNormalDispatch,
+  AppUseDispatchInMapping
+}
